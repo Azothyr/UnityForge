@@ -4,13 +4,44 @@
 [Bb]uild/
 [Bb]uilds/
 
+# Coding App settings
 .idea/
 *.idea
 
-# Game/<name>/Assets/Plugin/*
-# Game/<name>/Assets/AssetStoreTools/*
-# Game/<name>/Assets/TextMesh Pro/Examples & Extras/Textures/*
-# Game/<name>/Assets/TextMesh Pro/Examples & Extras/Sprites/*
+# User settings that will cause conflicts for all team members
+*/EditorUserSettings.asset
+
+# Unity logs to ignore
+*/AssetImportWorker*.log
+*/shadercompiler-AssetImportWorker*.log
+*/shadercompiler-UnityShaderCompiler.exe*.log
+
+# Unnecessary bulk
+Assets/Plugin/*
+Assets/AssetStoreTools/*
+Assets/TextMesh Pro/Examples & Extras/Textures/*
+Assets/TextMesh Pro/Examples & Extras/Sprites/*
+
+# Unity3D generated meta files
+*.pidb.meta
+*.pdb.meta
+*.meta
+
+# Unity3D Generated File On Crash Reports
+sysinfo.txt
+
+# Builds
+*.apk
+*.unitypackage
+
+# MacOS Desktop Services Store
+*.DS_Store
+
+# Houdini HDA's and bin files
+*.hdanc
+*.hda
+*.hipnc
+*.hip
 
 # Visual Studio cache directory
 .vs/
@@ -30,23 +61,3 @@ ExportedObj/
 *.svd
 *.pdb
 *.opendb
-
-# Unity3D generated meta files
-*.pidb.meta
-*.pdb.meta
-*.meta
-
-# Unity3D Generated File On Crash Reports
-sysinfo.txt
-
-# Builds
-*.apk
-*.unitypackage
-
-*.DS_Store
-
-# Houdini HDA's and bin files
-*.hdanc
-*.hda
-*.hipnc
-*.hip
