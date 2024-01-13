@@ -1,3 +1,4 @@
+/* InteractionHandler is causing a comiler error and needs to be updated before this can be used.
 using UnityEngine;
 
 public class TowerBuildManager : BuildingManager
@@ -46,3 +47,4 @@ public class TowerBuildManager : BuildingManager
         Instantiate(prefab, _position, Quaternion.identity);
     }
 }
+*/

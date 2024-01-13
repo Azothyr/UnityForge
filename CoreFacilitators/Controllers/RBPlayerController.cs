@@ -1,3 +1,4 @@
+/* inputActions.Player.Move is causing a compiler error and needs to be resolved before this script can be used.
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -88,4 +89,4 @@ public class PlayerController : RBControllerBase
         playerV3.Set(currentLocation);
     }
 }
-
+*/

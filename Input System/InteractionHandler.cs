@@ -1,3 +1,4 @@
+/* controls.GameInputObj.DefaultControls is causing a compiler error and needs to be created as dynamic
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
@@ -81,3 +82,4 @@ public class InteractionHandler : MonoBehaviour
         return _cameraUtility.GetHitCollider(_cameraMain, _clickPosition);
     }
 }
+*/
