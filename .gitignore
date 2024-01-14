@@ -6,6 +6,7 @@
 
 # Unnecessary Coding App settings
 .idea/
+*/.idea/
 *.idea
 
 # User settings that will cause conflicts for all team members
