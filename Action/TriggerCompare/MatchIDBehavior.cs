@@ -7,7 +7,6 @@ using UnityEngine.Events;
 
 public class MatchIDBehavior : IDBehavior
 {
-  
    [Serializable]
    public struct PossibleMatch
    {
