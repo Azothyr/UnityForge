@@ -4,12 +4,13 @@ using UnityEngine;
 public class Debugger : ScriptableObject
 {
        public bool individualDebug = true;
-       private DebugManager debugManager;
+       [SerializeField] private bool debugManagerExpected = true;
+       private DebugManager _debugManager;
 
        private void OnEnable()
        {
-              debugManager = FindObjectOfType<DebugManager>();
-              if (debugManager == null)
+              _debugManager = FindObjectOfType<DebugManager>();
+              if (_debugManager == null && debugManagerExpected)
               {
                      Debug.LogWarning("DebugManager not found in the scene.");
               }
@@ -17,7 +18,7 @@ public class Debugger : ScriptableObject
 
        private void Log(object message)
        {
-              if (debugManager.globalDebug  && individualDebug)
+              if (_debugManager.globalDebug  && individualDebug)
               {
                      Debug.Log(message);
               }
@@ -25,26 +26,26 @@ public class Debugger : ScriptableObject
        
        public void OnDebug(string obj)
        {
-              Log(obj);
+              Debug.Log(obj);
        }
        
        public void OnDebug(float obj)
        {
-              Log(obj);
+              Debug.Log(obj);
        }
        
        public void OnDebug(bool obj)
        {
-              Log(obj);
+              Debug.Log(obj);
        }
        
        public void OnDebug(object obj)
        {
-              Log(obj);
+              Debug.Log(obj);
        }
        
        public void OnDebug(int obj)
        {
-              Log(obj);
+              Debug.Log(obj);
        }
 }

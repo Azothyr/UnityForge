@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PrefabDataList", menuName = "Data/List/PrefabDataList")]
@@ -13,17 +14,11 @@ public class PrefabDataList : ScriptableObject
 
     public int GetPriority()
     {
-        var priority = 0;
-        foreach (PrefabData prefabData in prefabDataList)
-        {
-            priority += prefabData.priority;
-        }
-        return priority;
+        return prefabDataList.Sum(prefabData => prefabData.priority);
     }
 
     public GameObject GetRandomPrefab()
     {
-        GameObject prefab = prefabDataList[Random.Range(0, Size())].obj;
-        return prefab;
+        return prefabDataList[Random.Range(0, Size())].obj;
     }
 }

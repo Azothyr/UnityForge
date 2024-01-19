@@ -5,6 +5,12 @@ public class FloatData : ScriptableObject
 {
     public bool zeroOnEnable;
     public float value;
+    // private float _step;
+    //
+    // public float step { get; set; }
+    // {
+    //     _step = value;
+    // }
     
     private void OnEnable()
     {
@@ -19,6 +25,16 @@ public class FloatData : ScriptableObject
     public void UpdateValue(float num)
     {
         value += num;
+    }
+    
+    public void IncrementValue()
+    {
+        value++;
+    }
+    
+    public void DecrementValue()
+    {
+        value--;
     }
 
     private float GetPlayPrefVal(string key)

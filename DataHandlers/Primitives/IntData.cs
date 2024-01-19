@@ -26,6 +26,16 @@ public class IntData : ScriptableObject
         value = (value >= obj.value) ? value: obj.value;
     }
     
+    public void IncrementValue()
+    {
+        value++;
+    }
+    
+    public void DecrementValue()
+    {
+        value--;
+    }
+    
     public void UpdateValue(int num)
     {
         value += num;

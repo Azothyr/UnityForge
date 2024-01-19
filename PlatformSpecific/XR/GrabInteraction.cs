@@ -7,7 +7,9 @@ public class GrabInteraction : MonoBehaviour
 {
     private XRGrabInteractable _interactable;
 
-    public UnityEvent onLeftGrab, onLeftRelease, onRightGrab, onRightRelease;
+    public bool toggleGrabbersMeshVisibility;
+
+    public UnityEvent onGrab, onRelease;
 
     private void OnEnable()
     {
@@ -25,39 +27,34 @@ public class GrabInteraction : MonoBehaviour
 
     private void Grab(SelectEnterEventArgs arg)
     {
-        HandleInteraction(true, arg.interactorObject.transform.name);
+        if (toggleGrabbersMeshVisibility) ToggleVis(false, arg.interactorObject.transform);
+        HandleInteractionEvent(true);
     }
 
     private void Release(SelectExitEventArgs arg)
     {
-        HandleInteraction(false, arg.interactorObject.transform.name);
+        if (toggleGrabbersMeshVisibility) ToggleVis(true, arg.interactorObject.transform);
+        HandleInteractionEvent(false);
+    }
+
+    private void ToggleVis(bool on, Component interactor)
+    {
+        var meshBehavior = interactor.GetComponent<InteractorMeshBehavior>();
+        if (meshBehavior == null) return;
+        if (on) meshBehavior.Show();
+        else meshBehavior.Hide();
     }
     
-    private void HandleInteraction(bool grabbing, string side)
+
+    private void HandleInteractionEvent(bool grabbing)
     {
-        side = side.ToLower();
-        Debug.Log($"{grabbing} {side}");
-        if (side.Contains("left"))
+        if (grabbing)
         {
-            if (grabbing)
-            {
-                onLeftGrab?.Invoke();
-            }
-            else
-            {
-                onLeftRelease?.Invoke();
-            }
+            onGrab?.Invoke();
         }
-        else if (side.Contains("Right"))
+        else
         {
-            if (grabbing)
-            {
-                onRightGrab?.Invoke();
-            }
-            else
-            {
-                onRightRelease?.Invoke();
-            }
+            onRelease?.Invoke();
         }
     }
 }

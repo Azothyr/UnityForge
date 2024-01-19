@@ -1,13 +1,17 @@
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PrefabData", menuName = "Data/SingleValueData/PrefabData")]
-public class PrefabData : GameObjData
+public class PrefabData : ScriptableObject
 {
-    [SerializeField] private int spawnPriority;
-
-    public int priority
+    public GameObject prefab;
+    
+    public GameObject obj 
     {
-        get => spawnPriority;
-        set => spawnPriority = priority;
+        get => prefab;
+        set => prefab = obj;
     }
+    
+    [SerializeField] private int spawnPriority;
+    
+    public int priority { get => spawnPriority; set => spawnPriority = value; }
 }

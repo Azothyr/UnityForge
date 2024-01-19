@@ -3,40 +3,40 @@ using UnityEngine;
 [CreateAssetMenu (fileName = "SpawnerData", menuName = "Data/ManagerData/SpawnerData")]
 public class SpawnerData : ScriptableObject
 {
-    [HideInInspector] public int creepsAliveCount;
-    public IntData globalCreepsAliveCount;
+    [HideInInspector] public int activeInstancesCount;
+    public IntData globalActiveInstancesCount;
     public PrefabDataList prefabDataList;
+
+    private void Awake()
+    {
+        ResetSpawner();
+    }
 
     public void ResetSpawner()
     {
-        creepsAliveCount = 0;
+        activeInstancesCount = 0;
     }
 
     public int GetAliveCount()
     {
-        return creepsAliveCount;
+        if (activeInstancesCount < 0) activeInstancesCount = 0;
+        return activeInstancesCount;
     }
     
-    public void IncrementCreepsAliveCount()
+    public void IncrementActiveInstancesCount()
     {
-        globalCreepsAliveCount.UpdateValue(1);
-        creepsAliveCount += 1;
+        globalActiveInstancesCount.UpdateValue(1);
+        activeInstancesCount += 1;
     }
 
-    public void CreepKilled()
+    private void DecrementActiveInstancesCount()
     {
-        DecrementCreepsAliveCount();
+        globalActiveInstancesCount.UpdateValue(-1);
+        activeInstancesCount -= 1;
     }
 
-    public void CreepEscaped()
+    public void InstanceRemoved()
     {
-        DecrementCreepsAliveCount();
+        DecrementActiveInstancesCount();
     }
-
-    private void DecrementCreepsAliveCount()
-    {
-        globalCreepsAliveCount.UpdateValue(-1);
-        creepsAliveCount -= 1;
-    }
-
 }

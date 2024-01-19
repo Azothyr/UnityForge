@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 
 public class SocketMatchInteractor : XRSocketInteractor
@@ -13,7 +14,21 @@ public class SocketMatchInteractor : XRSocketInteractor
     }
 
     [SerializeField]
-    private List<PossibleMatch>? triggerEnterMatches;
+    private List<PossibleMatch>? triggerID;
+    
+    private XRGrabInteractable? _socketedObject;
+    
+    private static ID? FetchOtherID(GameObject interactable)
+    {
+        var idBehavior = interactable.transform.GetComponent<IDBehavior>();
+        return idBehavior != null ? (ID?)idBehavior.idObj : null;
+    }
+    
+    private bool CheckId(Object? nameId)
+    {
+        if (triggerID == null) return false;
+        return nameId != null && triggerID.Any(obj => nameId == obj.nameIdObj);
+    }
 
     public override bool CanHover(IXRHoverInteractable interactable)
     {
@@ -25,17 +40,25 @@ public class SocketMatchInteractor : XRSocketInteractor
         return base.CanSelect(interactable) && CheckId(FetchOtherID(interactable.transform.gameObject));
     }
 
-    private static ID? FetchOtherID(GameObject interactable)
+    protected override bool StartSocketSnapping(XRGrabInteractable interactable)
     {
-        var idBehavior = interactable.transform.GetComponent<IDBehavior>();
-        return idBehavior != null ? (ID?)idBehavior.idObj : null;
+        _socketedObject = interactable;
+        return base.StartSocketSnapping(interactable);
     }
     
-    private bool CheckId(ID? nameId)
+    protected override bool EndSocketSnapping(XRGrabInteractable grabInteractable)
     {
-        if (triggerEnterMatches == null) return false;
-        if (nameId == null) return false;
-
-        return triggerEnterMatches.Any(obj => nameId == obj.nameIdObj);
+        if (grabInteractable != _socketedObject) return base.EndSocketSnapping(grabInteractable);
+        _socketedObject = null;
+        return base.EndSocketSnapping(grabInteractable);
+    }
+    
+    public void RemoveSocketObject()
+    {
+        if (_socketedObject == null) return;
+        var obj = _socketedObject.transform;
+        obj.position = Vector3.zero;
+        EndSocketSnapping(_socketedObject);
+        obj.gameObject.SetActive(false);
     }
 }

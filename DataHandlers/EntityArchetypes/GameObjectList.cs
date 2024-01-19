@@ -6,7 +6,7 @@ public class GameObjectList : ScriptableObject
 {
     public List<GameObject> gameObjectList;
 
-    public int Size()
+    protected int Size()
     {
         return gameObjectList.Count;
     }

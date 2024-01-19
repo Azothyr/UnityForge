@@ -6,7 +6,7 @@ public class InteractorMeshBehavior: MonoBehaviour
     
     public void Show()
     {
-        model.SetActive(false);
+        model.SetActive(true);
     }
     
     public void Hide()
