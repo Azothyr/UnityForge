@@ -8,7 +8,7 @@ public class PrefabData : ScriptableObject
     public GameObject obj 
     {
         get => prefab;
-        set => prefab = obj;
+        set => prefab = value;
     }
     
     [SerializeField] private int spawnPriority;

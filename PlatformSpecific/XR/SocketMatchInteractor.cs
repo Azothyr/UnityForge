@@ -1,4 +1,4 @@
-#nullable enable
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,17 +14,57 @@ public class SocketMatchInteractor : XRSocketInteractor
     }
 
     [SerializeField]
-    private List<PossibleMatch>? triggerID;
+    private List<PossibleMatch> triggerID;
     
-    private XRGrabInteractable? _socketedObject;
+    public UnityEvent onObjectSocketed;
+    public UnityEvent onObjectUnsocketed;
     
-    private static ID? FetchOtherID(GameObject interactable)
+    private WaitForFixedUpdate _wffu = new WaitForFixedUpdate();
+    private WaitForSeconds _wfs = new WaitForSeconds(5.0f);
+    
+    private XRGrabInteractable _socketedObject;
+    private Collider _socketTrigger;
+    
+    private Coroutine _removeAndMoveCoroutine;
+    
+    private new void Awake()
     {
-        var idBehavior = interactable.transform.GetComponent<IDBehavior>();
-        return idBehavior != null ? (ID?)idBehavior.idObj : null;
+        _socketTrigger = GetComponent<Collider>();
+        _removeAndMoveCoroutine = null;
+        base.Awake();
+    }
+
+    protected override void OnEnable()
+    {
+        GetComponent<XRSocketInteractor>().selectEntered.AddListener(_ => OnObjectSocketed());
+        GetComponent<XRSocketInteractor>().selectExited.AddListener(_ => OnObjectUnsocketed());
+        base.OnEnable();
+    }
+
+    protected override void OnDisable()
+    {
+        GetComponent<XRSocketInteractor>().selectEntered.RemoveListener(_ => OnObjectSocketed());
+        GetComponent<XRSocketInteractor>().selectExited.RemoveListener(_ => OnObjectUnsocketed());
+        base.OnDisable();
     }
     
-    private bool CheckId(Object? nameId)
+    private void OnObjectSocketed()
+    {
+        onObjectSocketed.Invoke();
+    }
+    
+    private void OnObjectUnsocketed()
+    {
+        onObjectUnsocketed.Invoke();
+    }
+    
+    private static ID FetchOtherID(GameObject interactable)
+    {
+        var idBehavior = interactable.transform.GetComponent<IDBehavior>();
+        return idBehavior != null ? idBehavior.idObj : null;
+    }
+    
+    private bool CheckId(Object nameId)
     {
         if (triggerID == null) return false;
         return nameId != null && triggerID.Any(obj => nameId == obj.nameIdObj);
@@ -46,19 +86,33 @@ public class SocketMatchInteractor : XRSocketInteractor
         return base.StartSocketSnapping(interactable);
     }
     
-    protected override bool EndSocketSnapping(XRGrabInteractable grabInteractable)
+    protected override bool EndSocketSnapping(XRGrabInteractable interactable)
     {
-        if (grabInteractable != _socketedObject) return base.EndSocketSnapping(grabInteractable);
-        _socketedObject = null;
-        return base.EndSocketSnapping(grabInteractable);
+        return base.EndSocketSnapping(interactable);
     }
     
-    public void RemoveSocketObject()
+    public GameObject RemoveAndMoveSocketObject(Vector3 position, Quaternion rotation)
     {
-        if (_socketedObject == null) return;
-        var obj = _socketedObject.transform;
-        obj.position = Vector3.zero;
-        EndSocketSnapping(_socketedObject);
-        obj.gameObject.SetActive(false);
+        if (_socketedObject == null){Debug.LogWarning("SOCKETED OBJECT APPEARS TO BE NULL"); return null;}
+        var obj = _socketedObject.gameObject;
+        _socketTrigger.enabled = false;
+        if (_removeAndMoveCoroutine != null) return null;
+        _removeAndMoveCoroutine = StartCoroutine(PerformRemoveAndMove(position, rotation));
+        return obj;
+    }
+ 
+    private IEnumerator PerformRemoveAndMove(Vector3 position, Quaternion rotation)
+    {
+        var obj = _socketedObject.gameObject;
+        yield return _wffu;
+        interactionManager.CancelInteractableSelection(interactablesSelected[0]);
+        yield return _wffu;
+        obj.transform.position = position;
+        obj.transform.rotation = rotation;
+        yield return _wffu;
+        _socketedObject = null;
+        yield return _wffu;
+        _socketTrigger.enabled = true;
+        _removeAndMoveCoroutine = null;
     }
 }
