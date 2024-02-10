@@ -8,6 +8,6 @@ public class GameObjData : ScriptableObject
     public GameObject obj 
     {
         get => prefab;
-        set => prefab = obj;
+        set => prefab = value;
     }
 }

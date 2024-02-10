@@ -20,7 +20,6 @@ public class SocketMatchInteractor : XRSocketInteractor
     public UnityEvent onObjectUnsocketed;
     
     private WaitForFixedUpdate _wffu = new WaitForFixedUpdate();
-    private WaitForSeconds _wfs = new WaitForSeconds(5.0f);
     
     private XRGrabInteractable _socketedObject;
     private Collider _socketTrigger;
