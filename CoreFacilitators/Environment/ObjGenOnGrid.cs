@@ -111,17 +111,17 @@ public class ObjGenOnGrid : MonoBehaviour, INeedButton
         }
     }
 
-    public string GetButtonName()
+    public System.Collections.Generic.List<(System.Action, string)> GetButtonActions()
     {
-        return "Generate New";
+        return new System.Collections.Generic.List<(System.Action, string)>
+        {
+            (() =>
+            {
+                if (!_isResetting)
+                    CoroutineController.Run(DelayedResetGround());
+            }, "Generate New")
+        };
     }
-    
-    public void ButtonAction()
-    {
-        if (_isResetting) return;
-        StartCoroutine(DelayedResetGround());
-    }
-    
 /* Use this only to find the height offset you want. It duplicates the grid objects and breaks the navmesh. 
     public void OnValidate()
     {

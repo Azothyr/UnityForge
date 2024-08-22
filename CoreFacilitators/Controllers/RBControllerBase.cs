@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(DestroyBehavior))]
-public abstract class RBControllerBase : MonoBehaviour, ICollidableRB
+public abstract class RbControllerBase : MonoBehaviour, ICollidableRB
 {
     public UnityEvent deathTriggerEvent;
 

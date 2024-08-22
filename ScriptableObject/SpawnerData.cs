@@ -1,43 +1,40 @@
-using System;
 using UnityEngine;
 
 [CreateAssetMenu (fileName = "SpawnerData", menuName = "Data/ManagerData/SpawnerData")]
 public class SpawnerData : ScriptableObject
 {
-    [HideInInspector] public int activeInstancesCount;
-    public IntData globalActiveInstancesCount;
-    public PrefabDataList prefabDataList;
+    // ReSharper disable once NotAccessedField.Global
+    [SerializeField] [ReadOnly] public int activeInstances;
+    public IntData activeCount;
+    public PrefabDataList prefabList;
 
     private void Awake()
     {
-        ResetSpawner();
+        if (activeCount == null) Debug.LogError("Missing IntData for activeCount on SpawnerData" + name);
+        activeInstances = activeCount.value;
     }
 
     public void ResetSpawner()
     {
-        activeInstancesCount = 0;
+        activeCount.SetValue(0);
+        activeInstances = activeCount.value;
     }
 
     public int GetAliveCount()
     {
-        if (activeInstancesCount < 0) activeInstancesCount = 0;
-        return activeInstancesCount;
+        if (activeCount.value < 0) activeCount.SetValue(0);
+        return activeCount.value;
     }
     
-    public void IncrementActiveInstancesCount()
+    public void IncrementCount()
     {
-        globalActiveInstancesCount.UpdateValue(1);
-        activeInstancesCount += 1;
+        activeCount.UpdateValue(1);
+        activeInstances = activeCount.value;
     }
 
-    private void DecrementActiveInstancesCount()
+    public void DecrementCount()
     {
-        globalActiveInstancesCount.UpdateValue(-1);
-        activeInstancesCount -= 1;
-    }
-
-    public void InstanceRemoved()
-    {
-        DecrementActiveInstancesCount();
+        activeCount.UpdateValue(-1);
+        activeInstances = activeCount.value;
     }
 }

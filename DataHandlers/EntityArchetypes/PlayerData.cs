@@ -1,7 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu (fileName = "CharacterData", menuName = "Data/ControllerData/CharacterData/PlayerData")]
+[CreateAssetMenu (fileName = "PlayerData", menuName = "Data/Entity/PlayerData")]
 public class PlayerData : CharacterData
 {
-    
 }

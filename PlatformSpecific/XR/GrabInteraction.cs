@@ -8,6 +8,7 @@ public class GrabInteraction : MonoBehaviour
     private XRGrabInteractable _interactable;
 
     public bool toggleGrabbersMeshVisibility;
+    public bool canGrab { get; set; }
 
     public UnityEvent onGrab, onRelease;
 
@@ -24,10 +25,17 @@ public class GrabInteraction : MonoBehaviour
         _interactable.selectEntered.RemoveListener(Grab);
         _interactable.selectExited.RemoveListener(Release);
     }
+    
+    private void OnDestroy()
+    {
+        _interactable.selectEntered.RemoveListener(Grab);
+        _interactable.selectExited.RemoveListener(Release);
+    }
 
     private void Grab(SelectEnterEventArgs arg)
     {
         if (toggleGrabbersMeshVisibility) ToggleVis(false, arg.interactorObject.transform);
+        if (!canGrab) return;
         HandleInteractionEvent(true);
     }
 

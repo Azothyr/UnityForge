@@ -1,5 +1,4 @@
-public interface INeedButton 
+public interface INeedButton
 {
-    void ButtonAction();
-    string GetButtonName();
+    System.Collections.Generic.List<(System.Action, string)> GetButtonActions();
 }

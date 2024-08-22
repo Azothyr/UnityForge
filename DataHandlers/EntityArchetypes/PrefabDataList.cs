@@ -1,11 +1,10 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "PrefabDataList", menuName = "Data/List/PrefabDataList")]
 public class PrefabDataList : ScriptableObject
 {
-    public List<PrefabData> prefabDataList;
+    [HideInInspector] public List<PrefabData> prefabDataList;
 
     public int Size()
     {
@@ -14,11 +13,26 @@ public class PrefabDataList : ScriptableObject
 
     public int GetPriority()
     {
-        return prefabDataList.Sum(prefabData => prefabData.priority);
+        var sum = 0;
+        foreach (var prefabData in prefabDataList) sum += prefabData.priority;
+        return sum;
     }
-
-    public GameObject GetRandomPrefab()
+    
+    public int GetPrefabIndex(GameObject prefab)
     {
-        return prefabDataList[Random.Range(0, Size())].obj;
+        if (prefabDataList == null) return -1;
+        for (var i = 0; i < prefabDataList.Count; i++)
+        {
+            if (prefabDataList[i].prefab == prefab) return i;
+        }
+        return -1;
+    }
+    
+    public PrefabData GetRandomPrefabData()
+    {  
+        if (prefabDataList == null) return null;
+        if (prefabDataList.Count == 0) return null;
+        var randomIndex = Random.Range(0, Size());
+        return prefabDataList[randomIndex];
     }
 }

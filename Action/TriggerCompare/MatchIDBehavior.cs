@@ -1,46 +1,43 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class MatchIDBehavior : IDBehavior
 {
-   [Serializable]
-   public struct PossibleMatch
-   {
-      public ID nameIdObj;
-      public UnityEvent triggerEvent;
-   }
+    [System.Serializable]
+    public struct PossibleMatch
+    {
+        public ID id;
+        public UnityEvent triggerEvent;
+    }
+    
+    private readonly WaitForFixedUpdate _wffu = new();
+    public bool debug;
+    public List<PossibleMatch> triggerEnterMatches;
 
-   private WaitForFixedUpdate wffuObj = new WaitForFixedUpdate();
-   public List<PossibleMatch> triggerEnterMatches;
-   private ID otherIdObj;
+    private void OnTriggerEnter(Collider other)
+    {
+        IDBehavior idBehavior = other.GetComponent<IDBehavior>();
+        if (idBehavior == null) return;
+        StartCoroutine(CheckId(idBehavior.id, triggerEnterMatches));
+    }
+    
+    private IEnumerator CheckId(ID otherId, List<PossibleMatch> possibleMatches)
+    {
+        bool noMatch = true;
+        foreach (var obj in possibleMatches)
+        {
+            if (otherId != obj.id) continue;
+            if (debug) Debug.Log($"Match found on: '{this} (ID: {id})' with '{obj.id}' while checking for '{otherId}'");
+            noMatch = false;
+            obj.triggerEvent.Invoke();
+            yield return _wffu;
+        }
 
-   private void Awake()
-   {
-      foreach (var obj in triggerEnterMatches)
-      {
-         var possibleMatch = obj;
-      }
-   }
-
-   private void OnTriggerEnter(Collider other)
-   {
-      if (other.GetComponent<IDBehavior>() == null) return;
-      otherIdObj = other.GetComponent<IDBehavior>().idObj;
-      StartCoroutine(CheckId(otherIdObj, triggerEnterMatches));
-   }
-   
-   private IEnumerator CheckId(ID nameId, List<PossibleMatch> possibleMatches)
-   {
-      otherIdObj = nameId;
-      foreach (var obj in possibleMatches.Where(obj => otherIdObj == obj.nameIdObj))
-      {
-         obj.triggerEvent.Invoke();
-         
-         yield return wffuObj;
-      }
-   }
+        if (noMatch && debug)
+        {
+            Debug.Log($"No match found on: '{this} (ID: {id})' While checking for '{otherId}' in {possibleMatches.Count} possible matches.");
+        }
+    }
 }

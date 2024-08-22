@@ -4,14 +4,23 @@ using UnityEngine;
 public class PrefabData : ScriptableObject
 {
     public GameObject prefab;
-    
-    public GameObject obj 
+
+    public GameObject obj
     {
         get => prefab;
         set => prefab = value;
     }
-    
+
     [SerializeField] private int spawnPriority;
-    
-    public int priority { get => spawnPriority; set => spawnPriority = value; }
+
+    public int priority
+    {
+        get => spawnPriority;
+        set => spawnPriority = value;
+    }
+
+    public override string ToString()
+    {
+        return name;
+    }
 }

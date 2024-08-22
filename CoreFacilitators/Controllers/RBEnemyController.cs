@@ -2,31 +2,36 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class RBEnemyController : RBControllerBase
+public class RbEnemyController : RbControllerBase
 {
-    public Vector3Data playerV3;
+    public Vector3Data navigationTarget;
     public UnityEvent onGameOverEvent;
+    public bool moveOnEnable;
 
-    private EnemyData enemyData;
-
-    private Vector3 playerLocation;
+    private EnemyData _enemyData;
     
     protected override void Awake()
     {
         rigidBody = GetComponent<Rigidbody>();
         
-        enemyData = controllerData as EnemyData;
+        _enemyData = controllerData as EnemyData;
         
-        if (enemyData != null)
+        if (_enemyData != null)
         {
-            speed = enemyData.speed.value + (enemyData.speed.value * enemyData.speedDelta / 100.0f);
+            speed = _enemyData.speed.value + (_enemyData.speed.value * _enemyData.speedDelta / 100.0f);
         }
         else
         {
             Debug.LogError("EnemyData not found in controllerData.");
         }
-        
-        StartMovement();
+    }
+    
+    private void OnEnable()
+    {
+        if (moveOnEnable)
+        {
+            StartMovement();
+        }
     }
     
     public override void TriggerDeathEvent()
@@ -36,23 +41,31 @@ public class RBEnemyController : RBControllerBase
 
     public void PassScoreValue(IntData scoreContainer)
     {
-        scoreContainer.value += enemyData.scoreValue;
+        scoreContainer.value += _enemyData.scoreValue;
     }
 
     public void PassMonetaryValue(IntData wealthContainer)
     {
-        wealthContainer.value += enemyData.currencyValue;
+        wealthContainer.value += _enemyData.currencyValue;
     }
-    
+
     protected override IEnumerator Move()
     {
+        // Maximum velocity
+        float maxVelocity = 10f;
+
         while (controllerData.canRun.value)
         {
             SetCurrentV3();
-            
-            playerLocation = playerV3.value;
-            moveDirection = (playerLocation - transform.position).normalized;
-            rigidBody.AddForce(moveDirection * speed, ForceMode.Acceleration);
+
+            var goalPosition = navigationTarget.value;
+            moveDirection = (goalPosition - transform.position).normalized;
+
+            // Check if current speed is less than maxVelocity
+            if (rigidBody.velocity.magnitude < maxVelocity)
+            {
+                rigidBody.AddForce(moveDirection * speed, ForceMode.Acceleration);
+            }
 
             if (rigidBody.position.y > 0)
             {
@@ -61,6 +74,7 @@ public class RBEnemyController : RBControllerBase
 
             yield return wffuObj;
         }
+
         GameOverCheck();
     }
 

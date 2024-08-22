@@ -1,8 +1,9 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.XR.Interaction.Toolkit;
 
-public class SimpleInteractableTrigger : MonoBehaviour
+public class SimpleInteractableTrigger : MonoBehaviour, INeedButton
 {
     public UnityEvent onInteractionPerformed;
     public UnityEvent onInteractionEnded;
@@ -28,5 +29,10 @@ public class SimpleInteractableTrigger : MonoBehaviour
     private void OnInteractionEnded()
     {
         onInteractionEnded.Invoke();
+    }
+
+    public List<(System.Action, string)> GetButtonActions()
+    {
+        return new List<(System.Action, string)> { (() => onInteractionPerformed.Invoke(), "Perform Interaction") };
     }
 }

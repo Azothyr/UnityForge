@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CharacterData", menuName = "Data/ControllerData/CharacterData/EnemyData")]
+[CreateAssetMenu(fileName = "EnemyData", menuName = "Data/Entity/EnemyData")]
 public class EnemyData : CharacterData
 {
     public GameObject prefab;

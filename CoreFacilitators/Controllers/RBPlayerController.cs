@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class PlayerController : RBControllerBase
+public class PlayerController : RbControllerBase
 {
     [SerializeField] private Vector3 velocity;
 
